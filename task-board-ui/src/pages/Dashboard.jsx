@@ -24,10 +24,12 @@ export default function Dashboard() {
     loadProjects();
   };
 
-  const deleteProject = async (id) => {
-    await API.delete(`/projects/${id}`);
-    loadProjects();
-  };
+ const deleteProject = async (id) => {
+  if (!window.confirm("Delete this project?")) return;
+
+  await API.delete(`/projects/${id}`);
+  loadProjects();
+};
 
   return (
     <Layout>

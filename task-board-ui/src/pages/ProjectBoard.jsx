@@ -22,11 +22,11 @@ export default function ProjectBoard() {
     }
     setLoading(false);
   };
-
+const [filterStatus, setFilterStatus] = useState("");
   useEffect(() => {
     loadTasks();
     // eslint-disable-next-line
-  }, [id]);
+  }, [id]); 
 
   const addTask = async () => {
     if (!title.trim()) {
@@ -45,10 +45,12 @@ export default function ProjectBoard() {
     loadTasks();
   };
 
-  const deleteTask = async (taskId) => {
-    await API.delete(`/tasks/${taskId}`);
-    loadTasks();
-  };
+ const deleteTask = async (taskId) => {
+  if (!window.confirm("Are you sure you want to delete this task?")) return;
+
+  await API.delete(`/tasks/${taskId}`);
+  loadTasks();
+};
 
   return (
     <Layout>
@@ -65,13 +67,14 @@ export default function ProjectBoard() {
           />
 
           <select
-            className="form-select ms-2"
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="0">Todo</option>
-            <option value="1">In Progress</option>
-            <option value="2">Done</option>
-          </select>
+  className="form-select mb-3"
+  onChange={(e) => setFilterStatus(e.target.value)}
+>
+  <option value="">All</option>
+  <option value="0">Todo</option>
+  <option value="1">In Progress</option>
+  <option value="2">Done</option>
+</select>
 
           <button className="btn btn-primary ms-2" onClick={addTask}>
             Add
