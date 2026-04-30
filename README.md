@@ -1,182 +1,56 @@
-# 📌 Task Board Application (VARStreet Assignment)
+# Task Board App
 
-## 🚀 Overview
+This is a simple task management project where you can create projects and add tasks inside them. You can also add comments to tasks and see some basic dashboard info.
 
-This is a full-stack Task Management application built using:
+## Tech Used
 
-* Backend: ASP.NET Core Web API (.NET 8)
-* Frontend: React (Functional Components + Hooks)
-* Database: SQLite with Entity Framework Core
+* ASP.NET Core Web API
+* React
+* SQLite
+* Entity Framework Core
 
-The application allows users to:
-
-* Create and manage projects
-* Add tasks under projects
-* Track task status and priority
-* Add comments to tasks
-* View dashboard insights
-
----
-
-## 🛠️ Tech Stack
+## How to Run
 
 ### Backend
 
-* ASP.NET Core Web API
-* Entity Framework Core (SQLite)
-* Clean Architecture (Controllers → Services → DbContext)
-* Global Exception Handling Middleware
-
-### Frontend
-
-* React (Hooks + Functional Components)
-* React Router
-* Axios
-* Custom Hook (`useApi`)
-
----
-
-## 📁 Project Structure
-
-### Backend (`TaskBoard.Api`)
-
-* Controllers → API endpoints
-* Services → Business logic
-* Models → Entities
-* DTOs → Request/Response models
-* Data → DbContext + Seed Data
-* Middleware → Global exception handler
-* Migrations → EF Core migrations
-
-### Frontend (`task-board-ui`)
-
-* pages → Dashboard, Project Board, Task Detail
-* components → Reusable UI
-* hooks → useApi
-* services → API calls
-* context → Global state
-
----
-
-## ⚙️ Setup Instructions
-
-### 🔹 1. Clone Repository
-
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-cd YOUR-REPO
-
----
-
-### 🔹 2. Backend Setup
+Go to backend folder:
 
 cd TaskBoard.Api
 
-Restore packages:
+Run:
+
 dotnet restore
-
-Apply migrations:
-dotnet ef migrations add InitialCreate
 dotnet ef database update
-
-Run backend:
 dotnet run
 
-👉 API runs at: https://localhost:5001 (or similar)
+It will start on something like:
+https://github.com/TejasvPathre07/task-board
 
 ---
 
-### 🔹 3. Frontend Setup
+### Frontend
+
+Open another terminal:
 
 cd task-board-ui
 
-Install dependencies:
-npm install
+Run:
 
-Run frontend:
+npm install
 npm start
 
-👉 App runs at: http://localhost:3000
+App will open at:
+http://localhost:3000
 
 ---
 
-## 🔹 Database Seeding
+## Note
 
-On first run, the database is automatically seeded with sample Projects, Tasks, and Comments.
-
----
-
-## 🔹 API Configuration
-
-Update API base URL in:
-
-src/services/api.js
-
-Example:
-https://localhost:5001/api
+* Start backend first, then frontend
+* If API is not working, check the port in frontend
 
 ---
 
-## 🔗 API Endpoints
-
-### Projects
-
-* GET /api/projects
-* POST /api/projects
-* GET /api/projects/{id}
-* PUT /api/projects/{id}
-* DELETE /api/projects/{id}
-
-### Tasks
-
-* GET /api/projects/{projectId}/tasks
-* POST /api/projects/{projectId}/tasks
-* GET /api/tasks/{id}
-* PUT /api/tasks/{id}
-* DELETE /api/tasks/{id}
-
-### Comments
-
-* GET /api/tasks/{taskId}/comments
-* POST /api/tasks/{taskId}/comments
-* DELETE /api/comments/{id}
-
-### Dashboard
-
-* GET /api/dashboard
-
----
-
-## ✨ Features Implemented
-
-* CRUD operations for Projects, Tasks, Comments
-* Task filtering (status, priority)
-* Sorting (due date, priority, created date)
-* Pagination support
-* Dashboard summary (tasks by status, overdue, upcoming)
-* Global error handling middleware
-* DTO-based API design
-* SQLite persistence with EF Core
-* Clean layered architecture
-
----
-
-## ⚠️ Assumptions
-
-* Basic UI is implemented focusing on functionality
-* Validation handled via Data Annotations
-* API base URL is configurable
-
----
-
-## 📌 Notes
-
-* Controllers are thin — logic handled in Services
-* Auto timestamps handled in DbContext
-* Cascade delete configured
-
----
-
-## 🙌 Author
+## Author
 
 Tejas Pathre
-.NET Developer
