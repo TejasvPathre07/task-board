@@ -10,27 +10,24 @@ export default function ProjectBoard() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("");
 
   const loadTasks = async () => {
-    setLoading(true);
     try {
       const res = await API.get(`/projects/${id}/tasks`);
       setTasks(res.data.data || []);
     } catch {
       alert("Error loading tasks");
     }
-    setLoading(false);
   };
-const [filterStatus, setFilterStatus] = useState("");
+
   useEffect(() => {
     loadTasks();
-    // eslint-disable-next-line
-  }, [id]); 
+  }, [id]);
 
   const addTask = async () => {
-    if (!title.trim()) {
-      alert("Task title required");
+    if (!title) {
+      alert("Enter task title");
       return;
     }
 
@@ -45,58 +42,67 @@ const [filterStatus, setFilterStatus] = useState("");
     loadTasks();
   };
 
- const deleteTask = async (taskId) => {
-  if (!window.confirm("Are you sure you want to delete this task?")) return;
+  const deleteTask = async (taskId) => {
+    if (!window.confirm("Delete task?")) return;
 
-  await API.delete(`/tasks/${taskId}`);
-  loadTasks();
-};
+    await API.delete(`/tasks/${taskId}`);
+    loadTasks();
+  };
+
+  const filteredTasks = tasks.filter((t) => {
+    if (filterStatus === "") return true;
+    return t.status == filterStatus;
+  });
 
   return (
     <Layout>
-      <h4 className="mb-3">Tasks</h4>
+      <h4>Tasks</h4>
 
       {/* Add Task */}
       <div className="card p-3 mb-3">
-        <div className="d-flex">
-          <input
-            className="form-control"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Task title"
-          />
+        <input
+          className="form-control mb-2"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Task title"
+        />
 
-          <select
-  className="form-select mb-3"
-  onChange={(e) => setFilterStatus(e.target.value)}
->
-  <option value="">All</option>
-  <option value="0">Todo</option>
-  <option value="1">In Progress</option>
-  <option value="2">Done</option>
-</select>
+        <select
+          className="form-select mb-2"
+          onChange={(e) => setStatus(e.target.value)}
+        >
+          <option value="0">Todo</option>
+          <option value="1">In Progress</option>
+          <option value="2">Done</option>
+        </select>
 
-          <button className="btn btn-primary ms-2" onClick={addTask}>
-            Add
-          </button>
-        </div>
+        <button className="btn btn-primary" onClick={addTask}>
+          Add Task
+        </button>
       </div>
 
-      {/* Loading */}
-      {loading && <div className="alert alert-info">Loading...</div>}
+      {/* Filter */}
+      <select
+        className="form-select mb-3"
+        onChange={(e) => setFilterStatus(e.target.value)}
+      >
+        <option value="">All</option>
+        <option value="0">Todo</option>
+        <option value="1">In Progress</option>
+        <option value="2">Done</option>
+      </select>
 
-      {/* Empty */}
-      {!loading && tasks.length === 0 && (
-        <p className="text-muted">No tasks found</p>
-      )}
+      {filteredTasks.length === 0 && <p>No tasks</p>}
 
-      {/* Task List */}
-      {tasks.map((t) => (
+      {filteredTasks.map((t) => (
         <div className="card p-2 mb-2" key={t.id}>
           <strong>{t.title}</strong>
 
+          <div>
+            <small>Status: {t.status}</small>
+          </div>
+
           <div className="mt-2">
-            {/* View Task (for comments) */}
             <button
               className="btn btn-info btn-sm me-2"
               onClick={() => navigate(`/task/${t.id}`)}
@@ -104,7 +110,6 @@ const [filterStatus, setFilterStatus] = useState("");
               View
             </button>
 
-            {/* Delete */}
             <button
               className="btn btn-danger btn-sm"
               onClick={() => deleteTask(t.id)}
@@ -115,5 +120,5 @@ const [filterStatus, setFilterStatus] = useState("");
         </div>
       ))}
     </Layout>
-  );
+  );  
 }
