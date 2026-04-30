@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 
 namespace TaskBoard.Api.Middleware
@@ -20,34 +20,28 @@ namespace TaskBoard.Api.Middleware
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                context.Response.ContentType = "application/json";
+
+                var statusCode = (int)HttpStatusCode.InternalServerError;
+                var message = "Something went wrong";
+
+                // simple check for duplicate
+                if (ex.Message.Contains("already exists"))
+                {
+                    statusCode = (int)HttpStatusCode.Conflict;
+                    message = ex.Message;
+                }
+
+                context.Response.StatusCode = statusCode;
+
+                var result = JsonSerializer.Serialize(new
+                {
+                    success = false,
+                    message = message
+                });
+
+                await context.Response.WriteAsync(result);
             }
-        }
-
-        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
-        {
-            var response = context.Response;
-            response.ContentType = "application/json";
-
-            var statusCode = HttpStatusCode.InternalServerError;
-            var message = "Something went wrong";
-
-            // Custom handling
-            if (ex.Message.Contains("already exists"))
-            {
-                statusCode = HttpStatusCode.Conflict; // 409
-                message = ex.Message;
-            }
-
-            response.StatusCode = (int)statusCode;
-
-            var result = JsonSerializer.Serialize(new
-            {
-                success = false,
-                message = message
-            });
-
-            return response.WriteAsync(result);
         }
     }
 }
