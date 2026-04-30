@@ -11,11 +11,15 @@ export default function TaskDetail() {
   const [text, setText] = useState("");
 
   const loadData = async () => {
-    const t = await API.get(`/tasks/${id}`);
-    const c = await API.get(`/tasks/${id}/comments`);
+    try {
+      const t = await API.get(`/tasks/${id}`);
+      const c = await API.get(`/tasks/${id}/comments`);
 
-    setTask(t.data);
-    setComments(c.data);
+      setTask(t.data);
+      setComments(c.data || []);
+    } catch {
+      alert("Error loading task");
+    }
   };
 
   useEffect(() => {
@@ -23,7 +27,10 @@ export default function TaskDetail() {
   }, [id]);
 
   const addComment = async () => {
-    if (!text.trim()) return;
+    if (!text) {
+      alert("Enter comment");
+      return;
+    }
 
     await API.post(`/tasks/${id}/comments`, {
       author: "User",
@@ -35,30 +42,31 @@ export default function TaskDetail() {
   };
 
   const deleteComment = async (cid) => {
+    if (!window.confirm("Delete comment?")) return;
+
     await API.delete(`/comments/${cid}`);
     loadData();
   };
 
   return (
     <Layout>
-      <h3>{task?.title}</h3>
+      <h4>{task?.title}</h4>
       <p>{task?.description}</p>
 
       <hr />
 
       <h5>Comments</h5>
 
-      <div className="d-flex mb-3">
-        <input
-          className="form-control"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Write comment"
-        />
-        <button className="btn btn-primary ms-2" onClick={addComment}>
-          Add
-        </button>
-      </div>
+      <input
+        className="form-control mb-2"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Write comment"
+      />
+
+      <button className="btn btn-primary mb-3" onClick={addComment}>
+        Add Comment
+      </button>
 
       {comments.length === 0 && <p>No comments</p>}
 
