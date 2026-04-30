@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import ProjectBoard from "./pages/ProjectBoard";
-import TaskDetail from "./pages/TaskDetail";
+import TaskDetail from "./pages/TaskDetail"; 
 
 function App() {
   return (
@@ -9,6 +9,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/project/:id" element={<ProjectBoard />} />
+        
+        {/* ✅ ADD THIS ROUTE */}
         <Route path="/task/:id" element={<TaskDetail />} />
       </Routes>
     </BrowserRouter>
