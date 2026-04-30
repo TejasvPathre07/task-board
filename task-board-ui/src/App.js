@@ -9,12 +9,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/project/:id" element={<ProjectBoard />} />
-        
-        {/* ✅ ADD THIS ROUTE */}
         <Route path="/task/:id" element={<TaskDetail />} />
       </Routes>
     </BrowserRouter>
   );
 }
+
 
 export default App;
